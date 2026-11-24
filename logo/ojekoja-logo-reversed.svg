@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 150" role="img" aria-label="O.J. Ekoja &amp; Co. — Barristers, Solicitors &amp; Legal Consultants">
+  <rect width="720" height="150" fill="#0E1E3A"/>
+  <g transform="translate(14 8) scale(0.95)">
+    <path d="M60 4 L112 18 V64 C112 100 88 124 60 136 C32 124 8 100 8 64 V18 Z" fill="#0E1E3A" stroke="#C9A24A" stroke-width="1.5"/>
+    <path d="M60 12 L105 24 V64 C105 96 84 117 60 128 C36 117 15 96 15 64 V24 Z" fill="none" stroke="#C9A24A" stroke-width="1.5"/>
+    <g transform="translate(22.8 30) scale(0.62)" fill="none" stroke="#C9A24A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="60" cy="22" r="8"/><path d="M18 40 H102"/><path d="M60 30 V90 a13 13 0 0 1 -26 0"/>
+      <path d="M18 40 L8 66 M18 40 L28 66 M102 40 L92 66 M102 40 L112 66"/>
+      <path d="M4 66 H32 a14 10 0 0 1 -28 0 Z M88 66 H116 a14 10 0 0 1 -28 0 Z" fill="#C9A24A"/>
+    </g>
+  </g>
+  <text x="156" y="80" textLength="540" lengthAdjust="spacingAndGlyphs" font-family="'Cormorant Garamond', 'Times New Roman', Georgia, serif" font-weight="600" font-size="60" fill="#FFFFFF">O.J. EKOJA &amp; CO.</text>
+  <rect x="158" y="96" width="536" height="1.6" fill="#C9A24A"/>
+  <text x="158" y="125" textLength="536" lengthAdjust="spacing" font-family="Manrope, 'Segoe UI', Arial, sans-serif" font-weight="600" font-size="14.5" fill="#D9B970">BARRISTERS · SOLICITORS · LEGAL CONSULTANTS</text>
+</svg>
