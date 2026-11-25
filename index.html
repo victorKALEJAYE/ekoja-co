@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -162,6 +162,50 @@
   footer a:hover{color:#fff}
   .foot-logo{width:100%;max-width:360px;margin-bottom:18px}
   .legal{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:26px;font-size:13px;color:rgba(255,255,255,.5)}
+
+
+  /* Profile layout: button pinned to the bottom of the photo */
+  .profile{align-items:stretch}
+  .profile-info{display:flex;flex-direction:column}
+  .profile-info .tags{margin-bottom:0}
+  .profile-cta{margin-top:auto;align-self:flex-start}
+
+  /* ---------- Motion ---------- */
+  header{transition:box-shadow .3s}
+  header.scrolled{box-shadow:0 6px 24px rgba(14,30,58,.08)}
+  .eyebrow{display:inline-flex;align-items:center;gap:12px}
+  .eyebrow::before{content:"";height:1.5px;width:28px;background:currentColor;flex:none;transition:width 1s cubic-bezier(.2,.7,.2,1) .2s}
+  .js .eyebrow.reveal::before{width:0}
+  .js .eyebrow.reveal.in::before{width:28px}
+  .js .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+  .js .reveal.in{opacity:1;transform:none}
+  .hero h1 em{background:linear-gradient(100deg,var(--gold-lt) 0%,var(--gold-lt) 40%,#fff6dc 50%,var(--gold-lt) 60%,var(--gold-lt) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4.5s ease-in-out 1.4s infinite}
+  @keyframes shine{0%{background-position:100% 0}60%,100%{background-position:0 0}}
+  .js .hero-mark *{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s cubic-bezier(.6,.1,.2,1) forwards}
+  .js .hero-mark path:nth-child(n+2){animation-delay:.35s}
+  .js .hero-mark path:nth-child(n+4){animation-delay:.8s}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .hero-mark g{transform-origin:60px 22px;animation:sway 7s ease-in-out 2.6s infinite}
+  @keyframes sway{0%,100%{transform:rotate(0)}25%{transform:rotate(2.2deg)}75%{transform:rotate(-2.2deg)}}
+  .js .portrait.reveal{opacity:1;transform:none}
+  .js .portrait img{clip-path:inset(100% 0 0 0);transform:scale(1.12);transition:clip-path 1.3s cubic-bezier(.7,0,.2,1),transform 1.8s cubic-bezier(.2,.7,.2,1)}
+  .js .portrait.in img{clip-path:inset(0 0 0 0);transform:scale(1)}
+  .pa{transition:background .35s}
+  .pa:hover{background:var(--ivory)}
+  .pa .num{display:inline-block;transition:transform .35s}
+  .pa:hover .num{transform:translateX(8px)}
+  .pillar{transition:transform .35s,box-shadow .35s}
+  .pillar:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(14,30,58,.10);position:relative;z-index:1}
+  .zones div{transition:transform .3s,border-color .3s}
+  .zones div:hover{transform:translateY(-3px);border-color:var(--gold)}
+  .btn{transition:background .2s,color .2s,border-color .2s,transform .2s}
+  .btn:hover{transform:translateY(-2px)}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .js .reveal{opacity:1;transform:none}
+    .js .hero-mark *{stroke-dashoffset:0}
+    .js .portrait img{transform:none;clip-path:none}
+  }
 
   @media (max-width:1100px){
     .menu{position:fixed;inset:78px 0 auto 0;background:#fff;flex-direction:column;align-items:stretch;gap:0;padding:12px 28px 24px;border-bottom:1px solid var(--line);display:none}
@@ -326,15 +370,13 @@
       <h2>Leadership</h2>
       <div class="profile">
         <div class="portrait"><img src="images/partner-1.jpg" alt="Oche Ekoja, Esq., Principal Counsel, in barrister's wig and bands" loading="lazy"></div>
-        <div>
+        <div class="profile-info">
           <span class="role">Principal Counsel</span>
           <h3>Oche Ekoja, Esq.</h3>
-          <p>Oche Ekoja leads O.J. Ekoja &amp; Co. from its principal office in Abuja. The Principal Counsel brings technical legal competence together with a client-centred approach, guiding the firm’s work across litigation, corporate advisory and dispute resolution.</p>
-          <p>The practice rests on attentiveness, accessibility and a clear understanding of each client’s objectives. Oche is supported by a team of dedicated legal practitioners and by a network of professional relationships across Nigeria.</p>
           <div class="tags">
             <span>Litigation</span><span>Corporate Advisory</span><span>Debt Recovery</span><span>Real Estate</span><span>ADR</span>
           </div>
-          <a class="btn btn-gold" href="#contact">Book a Consultation</a>
+          <a class="btn btn-gold profile-cta" href="#contact">Book a Consultation</a>
         </div>
       </div>
     </div>
@@ -476,6 +518,31 @@
     if (!f.reportValidity()) return;
     window.open('https://wa.me/2347050308648?text=' + encodeURIComponent(body()), '_blank', 'noopener');
   });
+
+  // Hero mark: normalise path lengths so the draw-on animation works
+  document.querySelectorAll('.hero-mark circle, .hero-mark path').forEach(el => el.setAttribute('pathLength', '1'));
+
+  // Header shadow on scroll
+  const hdr = document.querySelector('header');
+  const onScroll = () => hdr.classList.toggle('scrolled', scrollY > 10);
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // Scroll reveal with stagger
+  const single = '.hero .eyebrow, .hero h1, .hero p, .hero-actions, section .eyebrow, section h2, .lead, .firm blockquote, .firm-copy p, .portrait, .profile .role, .profile h3, .profile .tags, .profile-cta, .band h2, .band p, .band .btn, form';
+  const groups = '.hero-facts > div, .pillar, .pa, .step, .zones > div, .details li';
+  document.querySelectorAll(single).forEach(el => el.classList.add('reveal'));
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => el.style.setProperty('--d', (0.15 + i * 0.15) + 's'));
+  const seen = new Map();
+  document.querySelectorAll(groups).forEach(el => {
+    const k = el.parentElement; const i = seen.get(k) || 0; seen.set(k, i + 1);
+    el.classList.add('reveal'); el.style.setProperty('--d', (i % 6) * 0.1 + 's');
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold: 0.15, rootMargin: '0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  // Once revealed, drop the reveal styles so hover effects run without delay
+  document.querySelectorAll('.reveal').forEach(el => el.addEventListener('transitionend', e => {
+    if (e.target === el && el.classList.contains('in')) { el.classList.remove('reveal'); el.style.removeProperty('--d'); }
+  }));
 </script>
 </body>
 </html>
