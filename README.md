@@ -28,3 +28,6 @@ Styles are in `assets/css/site.css`. Behaviour (menu, slider, scroll animations,
 
 ## Forms
 There is no server, so forms open the visitor's email app (to ojekojaandco@gmail.com) or WhatsApp (+234 705 030 8648) with the message filled in.
+
+## Photo credits
+- `images/hero-mission.jpg`: "Statue of justice holding scales against blue background" by Sasun Bughdaryan, [Unsplash](https://unsplash.com/photos/zbQ5UaREHx4) (Unsplash License).

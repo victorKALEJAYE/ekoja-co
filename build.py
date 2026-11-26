@@ -6,8 +6,13 @@ The generated .html files are committed, so the site works on any static host (e
 """
 from pathlib import Path
 from html import escape
+import hashlib
 
 ROOT = Path(__file__).parent
+
+def _ver(rel):
+    """Short content hash, appended to asset URLs so browsers fetch the new file after each change."""
+    return hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 FIRM = "O.J. Ekoja &amp; Co."
 PHONE_1, PHONE_1_TEL = "+234 816 919 8384", "+2348169198384"
@@ -136,7 +141,7 @@ def page(path, title, desc, nav_key, body, crumbs=None):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{p}assets/css/site.css">
+<link rel="stylesheet" href="{p}assets/css/site.css?v={_ver('assets/css/site.css')}">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -177,7 +182,7 @@ def page(path, title, desc, nav_key, body, crumbs=None):
     <span>Information on this website is general and is not legal advice.</span>
   </div>
 </footer>
-<script src="{p}assets/js/site.js" defer></script>
+<script src="{p}assets/js/site.js?v={_ver('assets/js/site.js')}" defer></script>
 </body>
 </html>
 """
