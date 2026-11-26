@@ -141,12 +141,28 @@
     }
     // Autoplay: the next slide is timed from the moment the current one has finished assembling,
     // so a change is never skipped. It only pauses while the browser tab is hidden.
+    // A thin gold timing line fills up over exactly the time until the next slide.
+    var bar = hero.querySelector('.hero-progress span');
+    function resetBar() {
+      if (!bar) return;
+      bar.style.transition = 'none'; bar.style.transform = 'scaleX(0)';
+      void bar.offsetWidth; // apply the reset before the next transition starts
+    }
+    function runBar() {
+      if (!bar) return;
+      resetBar();
+      bar.style.transition = 'transform ' + DELAY + 'ms linear';
+      bar.style.transform = 'scaleX(1)';
+    }
     function schedule() {
       clearTimeout(timer);
-      if (!reduce && slides.length > 1 && !document.hidden) timer = setTimeout(function () { go(current + 1); }, DELAY);
+      if (!reduce && slides.length > 1 && !document.hidden) {
+        timer = setTimeout(function () { resetBar(); go(current + 1); }, DELAY);
+        runBar();
+      }
     }
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) clearTimeout(timer); else if (!busy) schedule();
+      if (document.hidden) { clearTimeout(timer); resetBar(); } else if (!busy) schedule();
     });
     slides.forEach(function (s) { s.setAttribute('aria-hidden', 'true'); });
     whenReady(function () { go(0); });

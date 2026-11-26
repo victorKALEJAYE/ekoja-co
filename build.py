@@ -260,6 +260,7 @@ def build_home():
       <div class="btns anim"><a class="btn btn-solid" href="practice-areas.html">Our Practice Areas</a><a class="btn btn-outline-light" href="contact.html">Contact Us</a></div>
     </div>
   </div>
+  <div class="hero-progress" aria-hidden="true"><span></span></div>
 </section>"""
     practice = (f'<section class="section grey"><div class="container center">'
                 f'{heading("What we do", "Our Practice Areas", center=True)}'
