@@ -260,6 +260,42 @@ p+p{margin-top:16px}
 .js [data-anim].in{opacity:1;transform:none}
 .js [data-anim].done{transition-delay:0s}
 
+/* ---------- Page loader (like the reference theme's site preloader) ---------- */
+.preloader{display:none}
+.js .preloader{display:grid;place-items:center;position:fixed;inset:0;z-index:9999;background:#fff;transition:opacity .6s ease,visibility .6s}
+.js.is-loaded .preloader{opacity:0;visibility:hidden}
+.preloader > *{grid-area:1/1}
+.pl-ring{width:118px;height:118px;border-radius:50%;border:2px solid rgba(14,30,58,.12);border-top-color:var(--gold);border-right-color:var(--gold);animation:pl-spin 1s linear infinite}
+.pl-crest{width:50px;animation:pl-pulse 1.6s ease-in-out infinite}
+@keyframes pl-spin{to{transform:rotate(360deg)}}
+@keyframes pl-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.92);opacity:.75}}
+
+/* ---------- Home: transparent header over a full-screen slideshow (as on the reference) ---------- */
+.logo-light{display:none}
+.home .site-header{position:fixed;left:0;right:0;background:transparent;border-bottom-color:rgba(255,255,255,.14);transition:background .35s,box-shadow .35s,border-color .35s}
+.home .site-header:not(.scrolled) .logo-dark{display:none}
+.home .site-header:not(.scrolled) .logo-light{display:block}
+.home .site-header.scrolled{background:#fff;border-bottom-color:var(--line)}
+.home .hero{height:100vh;height:100svh;min-height:640px;max-height:none}
+.home .slide-content{padding-top:94px}
+@media (min-width:992px){
+  .home .site-header:not(.scrolled) .nav a{color:#fff}
+  .home .site-header:not(.scrolled) .nav a.active{color:var(--gold-lt)}
+  .home .site-header:not(.scrolled) .header-phone{color:#fff}
+  .home .site-header:not(.scrolled) .header-phone svg{background:var(--gold);color:#fff}
+}
+@media (max-width:991px){
+  .home .slide-content{padding-top:80px}
+  .home.menu-open .site-header{background:#fff}
+  .home.menu-open .site-header .logo-dark{display:block}
+  .home.menu-open .site-header .logo-light{display:none}
+}
+@media (max-width:767px){
+  .home .hero{height:auto;min-height:100svh}
+  .home .slide-content{padding-top:150px}
+}
+@media (prefers-reduced-motion:reduce){ .pl-ring,.pl-crest{animation:none} }
+
 /* ---------- Responsive ---------- */
 @media (max-width:1199px){
   .header-phone{display:none}

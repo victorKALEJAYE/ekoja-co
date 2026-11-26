@@ -3,6 +3,20 @@
   'use strict';
   var root = document.documentElement;
 
+  // Page loader: fades out once the page has loaded (or after 4s at most), then 'site:ready' fires.
+  var readyFired = false;
+  function siteReady() {
+    if (readyFired) return; readyFired = true;
+    root.classList.add('is-loaded');
+    setTimeout(function () { var pl = document.querySelector('.preloader'); if (pl) pl.remove(); }, 700);
+    document.dispatchEvent(new Event('site:ready'));
+  }
+  var t0 = Date.now();
+  function onLoaded() { setTimeout(siteReady, Math.max(0, 500 - (Date.now() - t0))); }
+  if (document.readyState === 'complete') onLoaded(); else window.addEventListener('load', onLoaded);
+  setTimeout(siteReady, 4000);
+  function whenReady(fn) { if (readyFired) fn(); else document.addEventListener('site:ready', fn, { once: true }); }
+
   // Header shadow on scroll
   var header = document.querySelector('.site-header');
   function onScroll() { if (header) header.classList.toggle('scrolled', window.scrollY > 10); }
@@ -135,7 +149,7 @@
       if (document.hidden) clearTimeout(timer); else if (!busy) schedule();
     });
     slides.forEach(function (s) { s.setAttribute('aria-hidden', 'true'); });
-    go(0);
+    whenReady(function () { go(0); });
   }
 
   // Scroll animations: [data-anim] fades up when it enters the viewport.
@@ -166,7 +180,7 @@
   window.addEventListener('scroll', queue, { passive: true });
   window.addEventListener('resize', queue);
   window.addEventListener('load', queue);
-  reveal();
+  whenReady(reveal);
 
   // Forms: no server, so messages open in the visitor's email app or WhatsApp.
   var EMAIL = 'ojekojaandco@gmail.com', WHATSAPP = '2347050308648';

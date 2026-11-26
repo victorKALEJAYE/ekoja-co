@@ -119,7 +119,7 @@ NAV = [("index.html", "Home", "home"), ("about.html", "About Us", "about"), ("pr
        ("team.html", "Our Team", "team"), ("contact.html", "Contact Us", "contact")]
 
 # ---------------------------------------------------------------- layout
-def page(path, title, desc, nav_key, body, crumbs=None):
+def page(path, title, desc, nav_key, body, crumbs=None, body_class=""):
     depth = path.count("/")
     p = "../" * depth  # relative prefix back to site root
     nav = "".join(f'<a href="{p}{href}"{" class=\"active\" aria-current=\"page\"" if key == nav_key else ""}>{label}</a>' for href, label, key in NAV)
@@ -144,11 +144,12 @@ def page(path, title, desc, nav_key, body, crumbs=None):
 <link rel="stylesheet" href="{p}assets/css/site.css?v={_ver('assets/css/site.css')}">
 <script>document.documentElement.classList.add('js')</script>
 </head>
-<body>
+<body class="{body_class}">
+<div class="preloader" aria-hidden="true"><div class="pl-ring"></div><div class="pl-crest">{CREST}</div></div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="logo" href="{p}index.html"><img src="{p}logo/ojekoja-logo-horizontal.svg" alt="{FIRM} — Barristers, Solicitors &amp; Legal Consultants" width="290" height="60"></a>
+    <a class="logo" href="{p}index.html"><img class="logo-dark" src="{p}logo/ojekoja-logo-horizontal.svg?v={_ver('logo/ojekoja-logo-horizontal.svg')}" alt="{FIRM} — Barristers, Solicitors &amp; Legal Consultants" width="290" height="60"><img class="logo-light" src="{p}logo/ojekoja-logo-reversed.svg?v={_ver('logo/ojekoja-logo-reversed.svg')}" alt="" width="290" height="60"></a>
     <nav class="nav" id="nav" aria-label="Main">{nav}</nav>
     <a class="header-phone" href="tel:{PHONE_2_TEL}">{icon("phone", "")}<span>{PHONE_2}</span></a>
     <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
@@ -161,7 +162,7 @@ def page(path, title, desc, nav_key, body, crumbs=None):
 <footer class="site-footer">
   <div class="container footer-top">
     <div>
-      <img class="footer-logo" src="{p}logo/ojekoja-logo-reversed.svg" alt="{FIRM}" width="280" height="58" loading="lazy">
+      <img class="footer-logo" src="{p}logo/ojekoja-logo-reversed.svg?v={_ver('logo/ojekoja-logo-reversed.svg')}" alt="{FIRM}" width="280" height="58" loading="lazy">
       <p>A duly registered Nigerian law firm offering practical, prompt and principled legal services from Abuja to clients across the country.</p>
     </div>
     <div>
@@ -282,7 +283,7 @@ def build_home():
     body = slides + practice + about + strip() + values_section() + people + callback()
     page("index.html", "Barristers, Solicitors &amp; Legal Consultants, Abuja",
          "O.J. Ekoja & Co. is an Abuja law firm offering litigation, debt recovery, corporate advisory, due diligence, intellectual property, real estate, regulatory compliance and ADR services across Nigeria.",
-         "home", body)
+         "home", body, body_class="home")
 
 ABOUT_TEXT = [
     "O.J. Ekoja &amp; Co. is a duly registered law firm comprising a team of dynamic, innovative and dedicated legal practitioners, with its principal office in the Federal Capital Territory, Abuja, Nigeria. The firm is distinguished by its commitment to excellence, prompt service delivery and the highest standards of professional integrity.",
