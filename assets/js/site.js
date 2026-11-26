@@ -121,24 +121,21 @@
           next.classList.add('is-active'); next.removeAttribute('aria-hidden');
           if (prev) prev.classList.remove('is-leaving');
           busy = false;
+          schedule();
         });
       });
     }
-    function restart() { clearInterval(timer); if (!reduce && slides.length > 1) timer = setInterval(function () { go(current + 1); }, DELAY); }
-    hero.querySelector('.prev').addEventListener('click', function () { go(current - 1); restart(); });
-    hero.querySelector('.next').addEventListener('click', function () { go(current + 1); restart(); });
-    hero.addEventListener('mouseenter', function () { clearInterval(timer); });
-    hero.addEventListener('mouseleave', restart);
-    document.addEventListener('visibilitychange', function () { document.hidden ? clearInterval(timer) : restart(); });
-    var x0 = null;
-    hero.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-    hero.addEventListener('touchend', function (e) {
-      if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 50) { go(current + (dx < 0 ? 1 : -1)); restart(); }
+    // Autoplay: the next slide is timed from the moment the current one has finished assembling,
+    // so a change is never skipped. It only pauses while the browser tab is hidden.
+    function schedule() {
+      clearTimeout(timer);
+      if (!reduce && slides.length > 1 && !document.hidden) timer = setTimeout(function () { go(current + 1); }, DELAY);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) clearTimeout(timer); else if (!busy) schedule();
     });
     slides.forEach(function (s) { s.setAttribute('aria-hidden', 'true'); });
     go(0);
-    restart();
   }
 
   // Scroll animations: [data-anim] fades up when it enters the viewport.

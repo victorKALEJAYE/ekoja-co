@@ -109,10 +109,6 @@ p+p{margin-top:16px}
 .slide.is-active .anim:nth-child(1){transition-delay:.1s}
 .slide.is-active .anim:nth-child(3){transition-delay:.7s}
 .slide.is-active .anim:nth-child(4){transition-delay:.95s}
-.hero-arrow{position:absolute;top:50%;z-index:5;width:60px;height:60px;margin-top:-30px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;display:grid;place-items:center;transition:background .25s,border-color .25s}
-.hero-arrow:hover{background:var(--gold);border-color:var(--gold)}
-.hero-arrow svg{width:22px;height:22px}
-.hero-arrow.prev{left:24px}.hero-arrow.next{right:24px}
 
 /* ---------- Practice cards (icon boxes) ---------- */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
@@ -298,8 +294,7 @@ p+p{margin-top:16px}
   .form-band{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr 1fr;gap:44px}
   .footer-top > :first-child{grid-column:1/-1}
-  .hero-arrow{display:none}
-}
+  }
 @media (max-width:767px){
   :root{--sec:50px}
   body{font-size:15px}

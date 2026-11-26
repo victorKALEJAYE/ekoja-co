@@ -259,8 +259,6 @@ def build_home():
       <div class="btns anim"><a class="btn btn-solid" href="practice-areas.html">Our Practice Areas</a><a class="btn btn-outline-light" href="contact.html">Contact Us</a></div>
     </div>
   </div>
-  <button class="hero-arrow prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <button class="hero-arrow next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg></button>
 </section>"""
     practice = (f'<section class="section grey"><div class="container center">'
                 f'{heading("What we do", "Our Practice Areas", center=True)}'
