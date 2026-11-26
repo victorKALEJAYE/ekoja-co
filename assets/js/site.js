@@ -21,32 +21,108 @@
     window.addEventListener('resize', function () { if (window.innerWidth > 991) document.body.classList.remove('menu-open'); });
   }
 
-  // Hero slider: crossfade + zoom, arrows, dots, swipe, autoplay (paused on hover / hidden tab)
-  // Optional hero photos: shown only if the image file exists, otherwise the drawn background stays.
-  document.querySelectorAll('.slide-bg[data-photo]').forEach(function (bg) {
-    var img = new Image();
-    img.onload = function () { bg.style.backgroundImage = 'url(' + bg.getAttribute('data-photo') + ')'; bg.classList.add('has-photo'); var a = bg.parentNode.querySelector('.slide-art'); if (a) a.style.display = 'none'; };
-    img.src = bg.getAttribute('data-photo');
-  });
+  // Hero slider. Each slide's photo is assembled from a 5x5 grid of tiles that fly in and
+  // come together (as on the reference's slider), then the headline letters gather into place.
   var hero = document.querySelector('.hero');
   if (hero) {
-    var slides = hero.querySelectorAll('.slide');
-    var dotsWrap = hero.querySelector('.hero-dots');
-    var current = 0, timer = null, DELAY = 6000;
+    var slides = Array.prototype.slice.call(hero.querySelectorAll('.slide'));
+    var current = -1, timer = null, busy = false, DELAY = 7500;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    slides.forEach(function (_, i) {
-      var b = document.createElement('button');
-      b.type = 'button'; b.setAttribute('aria-label', 'Show slide ' + (i + 1));
-      b.addEventListener('click', function () { go(i); restart(); });
-      dotsWrap.appendChild(b);
+
+    // Split each headline into letters so they can converge individually.
+    slides.forEach(function (s) {
+      var h = s.querySelector('.letters');
+      if (!h) return;
+      var text = h.textContent, i = 0;
+      h.setAttribute('aria-label', text);
+      h.textContent = '';
+      text.split(' ').forEach(function (word, w) {
+        var wspan = document.createElement('span');
+        wspan.className = 'word'; wspan.setAttribute('aria-hidden', 'true');
+        word.split('').forEach(function (ch) {
+          var c = document.createElement('span');
+          c.className = 'ch'; c.textContent = ch;
+          c.style.setProperty('--x', Math.round((Math.random() - 0.5) * 220) + 'px');
+          c.style.setProperty('--y', Math.round((Math.random() - 0.5) * 160) + 'px');
+          c.style.setProperty('--r', Math.round((Math.random() - 0.5) * 70) + 'deg');
+          c.style.setProperty('--d', (0.05 + i++ * 0.045).toFixed(3) + 's');
+          wspan.appendChild(c);
+        });
+        if (w) h.appendChild(document.createTextNode(' '));
+        h.appendChild(wspan);
+      });
     });
-    var dots = dotsWrap.querySelectorAll('button');
+
+    // Load each slide photo; remember its size so tiles can match the 'cover' crop exactly.
+    function loadPhoto(bg) {
+      return new Promise(function (resolve) {
+        var src = bg.getAttribute('data-photo');
+        if (!src) return resolve(false);
+        var img = new Image();
+        img.onload = function () {
+          bg.style.backgroundImage = 'url(' + src + ')';
+          bg.dataset.w = img.naturalWidth; bg.dataset.h = img.naturalHeight;
+          bg.classList.add('has-photo');
+          var art = bg.parentNode.querySelector('.slide-art'); if (art) art.style.display = 'none';
+          resolve(true);
+        };
+        img.onerror = function () { resolve(false); };
+        img.src = src;
+      });
+    }
+    var loaded = slides.map(function (s) { var bg = s.querySelector('.slide-bg'); return bg ? loadPhoto(bg) : Promise.resolve(false); });
+
+    function assemble(slide, done) {
+      var bg = slide.querySelector('.slide-bg');
+      if (reduce || !bg.classList.contains('has-photo')) return done();
+      var W = hero.clientWidth, H = hero.clientHeight;
+      var cs = getComputedStyle(bg), overlay = getComputedStyle(bg, '::after').backgroundImage;
+      var iw = +bg.dataset.w, ih = +bg.dataset.h, k = Math.max(W / iw, H / ih), sw = iw * k, sh = ih * k;
+      var pos = cs.backgroundPosition.split(' ');
+      var px = parseFloat(pos[0]) / 100, py = parseFloat(pos[1] || '50%') / 100;
+      var ox = (W - sw) * px, oy = (H - sh) * py;
+      var COLS = 5, ROWS = 5, tw = W / COLS, th = H / ROWS, longest = 0;
+      var layer = document.createElement('div');
+      layer.className = 'tiles';
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var t = document.createElement('div'), x = c * tw, y = r * th;
+          t.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + Math.ceil(tw + 1) + 'px;height:' + Math.ceil(th + 1) + 'px;' +
+            'background-image:' + overlay + ',' + cs.backgroundImage + ';' +
+            'background-size:' + W + 'px ' + H + 'px,' + sw + 'px ' + sh + 'px;' +
+            'background-position:' + (-x) + 'px ' + (-y) + 'px,' + (ox - x) + 'px ' + (oy - y) + 'px';
+          layer.appendChild(t);
+          // Tiles start pushed outwards from the centre and converge to their place.
+          var dx = (c - (COLS - 1) / 2) * 90 + (Math.random() - 0.5) * 60;
+          var dy = (r - (ROWS - 1) / 2) * 70 + (Math.random() - 0.5) * 60;
+          var delay = Math.random() * 500, dur = 900;
+          longest = Math.max(longest, delay + dur);
+          t.animate([
+            { opacity: 0, transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.35) rotate(' + ((Math.random() - 0.5) * 30) + 'deg)' },
+            { opacity: 1, transform: 'none' }
+          ], { duration: dur, delay: delay, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' });
+        }
+      }
+      hero.appendChild(layer);
+      setTimeout(function () { done(); requestAnimationFrame(function () { layer.remove(); }); }, longest + 40);
+    }
+
     function go(n) {
-      slides[current].classList.remove('is-active'); slides[current].setAttribute('aria-hidden', 'true');
-      dots[current].classList.remove('is-active');
-      current = (n + slides.length) % slides.length;
-      slides[current].classList.add('is-active'); slides[current].removeAttribute('aria-hidden');
-      dots[current].classList.add('is-active');
+      if (busy) return;
+      n = (n + slides.length) % slides.length;
+      if (n === current) return;
+      busy = true;
+      var prev = current >= 0 ? slides[current] : null;
+      var next = slides[n];
+      current = n;
+      if (prev) { prev.classList.remove('is-active'); prev.classList.add('is-leaving'); prev.setAttribute('aria-hidden', 'true'); }
+      loaded[n].then(function () {
+        assemble(next, function () {
+          next.classList.add('is-active'); next.removeAttribute('aria-hidden');
+          if (prev) prev.classList.remove('is-leaving');
+          busy = false;
+        });
+      });
     }
     function restart() { clearInterval(timer); if (!reduce && slides.length > 1) timer = setInterval(function () { go(current + 1); }, DELAY); }
     hero.querySelector('.prev').addEventListener('click', function () { go(current - 1); restart(); });
@@ -60,8 +136,8 @@
       if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
       if (Math.abs(dx) > 50) { go(current + (dx < 0 ? 1 : -1)); restart(); }
     });
-    slides.forEach(function (s, i) { if (i) s.setAttribute('aria-hidden', 'true'); });
-    slides[0].classList.add('is-active'); dots[0].classList.add('is-active');
+    slides.forEach(function (s) { s.setAttribute('aria-hidden', 'true'); });
+    go(0);
     restart();
   }
 

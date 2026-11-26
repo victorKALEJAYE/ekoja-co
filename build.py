@@ -245,7 +245,7 @@ def build_home():
     <div class="slide-art">{SCALES_MARK}</div>
     <div class="container slide-content">
       <span class="slide-kicker anim">{FIRM}</span>
-      <h1 class="anim">Teamwork</h1>
+      <h1 class="letters">Teamwork</h1>
       <p class="anim">{TEAMWORK}</p>
       <div class="btns anim"><a class="btn btn-solid" href="about.html">About the Firm</a><a class="btn btn-outline-light" href="practice-areas.html">Practice Areas</a></div>
     </div>
@@ -254,14 +254,13 @@ def build_home():
     <div class="slide-bg art-library" data-photo="images/hero-mission.jpg"></div>
     <div class="container slide-content">
       <span class="slide-kicker anim">A dynamic, dedicated team of legal practitioners</span>
-      <h2 class="anim">Our Mission</h2>
+      <h2 class="letters">Our Mission</h2>
       <p class="anim">{MISSION}</p>
       <div class="btns anim"><a class="btn btn-solid" href="practice-areas.html">Our Practice Areas</a><a class="btn btn-outline-light" href="contact.html">Contact Us</a></div>
     </div>
   </div>
   <button class="hero-arrow prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button class="hero-arrow next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg></button>
-  <div class="hero-dots"></div>
 </section>"""
     practice = (f'<section class="section grey"><div class="container center">'
                 f'{heading("What we do", "Our Practice Areas", center=True)}'
