@@ -140,6 +140,10 @@ p+p{margin-top:16px}
 .media-art{width:100%;height:100%;display:grid;place-items:center;background:
   radial-gradient(circle at 70% 25%,rgba(201,162,74,.22),transparent 55%),linear-gradient(160deg,var(--navy-2),var(--navy-3))}
 .media-art svg{width:58%;opacity:.9}
+.media-caption{position:absolute;z-index:2;left:-24px;bottom:96px;background:#fff;padding:18px 26px 18px 22px;border-left:3px solid var(--gold);box-shadow:0 14px 34px rgba(9,21,43,.16);transition:transform .3s}
+.media-caption:hover{transform:translateY(-3px)}
+.media-caption .label{margin-bottom:4px;font-size:11px}
+.media-caption strong{display:block;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
 .person-name{font-size:24px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin:-6px 0 4px}
 .person-role{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:18px;display:block}
 
@@ -361,6 +365,8 @@ p+p{margin-top:16px}
   .split-media{padding:0 30px 30px 0}
   .split.reverse .split-media{padding:0 0 30px 30px}
   .split-media::after{right:14px;bottom:14px}
+  .media-caption{left:0;bottom:54px;padding:14px 18px}
+  .media-caption strong{font-size:14px}
   .split.reverse .split-media::after{left:14px}
   .banner{aspect-ratio:16/9}
   .footer-top{grid-template-columns:1fr;padding-top:60px;padding-bottom:40px}

@@ -277,17 +277,19 @@ def build_home():
                 f'</div></section>')
     about = (f'<section class="section"><div class="container split">'
              f'<div class="split-text">{heading("About us", "A dynamic, dedicated team of legal practitioners")}'
-             f'<p data-anim>{ABOUT_SHORT}</p>'
+             f'<p data-anim>{ABOUT_SHORT}</p><p data-anim>{PARTNER["bio"]}</p>'
              f'<div class="btns" data-anim><a class="btn btn-navy" href="about.html">Read More</a></div></div>'
-             f'<div class="split-media" data-anim="fade"><div class="media-frame">{art()}</div></div>'
+             f'<div class="split-media" data-anim="fade"><div class="media-frame"><img src="{PARTNER["photo"]}" alt="{PARTNER["name"]}, Founding Partner" width="800" height="1200" loading="lazy"></div>'
+             f'<a class="media-caption" href="team/{PARTNER["slug"]}.html"><span class="label">Founding Partner</span><strong>{PARTNER["name"]}</strong></a></div>'
              f'</div></section>')
+    F = FREDRICK
     people = (f'<section class="section"><div class="container split reverse">'
-              f'<div class="split-text">{heading("Our People", "Managing Partner")}'
-              f'<p class="person-name" data-anim>{PARTNER["name"]}</p>'
-              f'<span class="person-role" data-anim>{PARTNER["role"]}</span>'
-              f'<p data-anim>{PARTNER["bio"]}</p>'
-              f'<div class="btns" data-anim><a class="btn btn-navy" href="team/{PARTNER["slug"]}.html">View Profile</a></div></div>'
-              f'<div class="split-media" data-anim="fade"><div class="media-frame"><img src="{PARTNER["photo"]}" alt="{PARTNER["name"]}, {PARTNER["role"]}" width="800" height="1200" loading="lazy"></div></div>'
+              f'<div class="split-text">{heading("Our People", "Our Partners")}'
+              f'<p class="lead" data-anim>Our partners bring their collective experience together to deliver effective legal solutions and exceptional service to our clients.</p>'
+              f'<p class="person-name" data-anim>{F["name"]}</p>'
+              f'<span class="person-role" data-anim>{F["role"]}</span>'
+              f'<div class="btns" data-anim><a class="btn btn-navy" href="team/{F["slug"]}.html">View Profile</a><a class="btn btn-outline" href="team.html">Meet the Team</a></div></div>'
+              f'<div class="split-media" data-anim="fade"><div class="media-frame"><img src="{F["photo"]}" alt="{F["name"]}, {F["role"]}" width="{F["w"]}" height="{F["h"]}" loading="lazy"></div></div>'
               f'</div></section>')
     body = slides + practice + about + strip() + values_section() + people + callback()
     page("index.html", "Barristers, Solicitors &amp; Legal Consultants, Abuja",
