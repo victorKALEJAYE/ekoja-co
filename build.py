@@ -111,6 +111,14 @@ PARTNER = dict(
     areas=["Litigation", "Corporate Advisory", "Dispute Resolution"],
 )
 
+FREDRICK = dict(
+    slug="fredrick-ukemezim", name="Fredrick Emeke Ukemezim", role="Partner", photo="images/fredrick-ukemezim.jpg",
+    bio="Fredrick Emeke Ukemezim is a Partner at O.J. Ekoja &amp; Co.",
+    areas=[], w=720, h=1080,
+)
+
+TEAM = [PARTNER, FREDRICK]
+
 TEAMWORK = "At O. J. Ekoja &amp; Co., we value collaboration and shared expertise, bringing our collective experience together to deliver effective legal solutions and exceptional service to our clients."
 MISSION = "To provide strategic, innovative, and result-oriented legal solutions that protect our clients&rsquo; interests and address their evolving legal needs."
 ABOUT_SHORT = "The firm is distinguished by its commitment to excellence, prompt service delivery and the highest standards of professional integrity."
@@ -248,7 +256,7 @@ def build_home():
       <span class="slide-kicker anim">{FIRM}</span>
       <h1 class="letters">Teamwork</h1>
       <p class="anim">{TEAMWORK}</p>
-      <div class="btns anim"><a class="btn btn-solid" href="about.html">About the Firm</a><a class="btn btn-outline-light" href="practice-areas.html">Practice Areas</a></div>
+      <div class="btns anim"><a class="btn btn-solid" href="team.html">Our Partners</a></div>
     </div>
   </div>
   <div class="slide">
@@ -257,7 +265,7 @@ def build_home():
       <span class="slide-kicker anim">A dynamic, dedicated team of legal practitioners</span>
       <h2 class="letters">Our Mission</h2>
       <p class="anim">{MISSION}</p>
-      <div class="btns anim"><a class="btn btn-solid" href="practice-areas.html">Our Practice Areas</a><a class="btn btn-outline-light" href="contact.html">Contact Us</a></div>
+      <div class="btns anim"><a class="btn btn-solid" href="about.html">About Us</a></div>
     </div>
   </div>
   <div class="hero-progress" aria-hidden="true"><span></span></div>
@@ -342,9 +350,12 @@ def build_practice_pages():
 
 def member_card(m, p=""):
     return (f'<article class="member"><a class="photo" href="{p}team/{m["slug"]}.html" tabindex="-1" aria-hidden="true">'
-            f'<img src="{p}{m["photo"]}" alt="" width="800" height="1200" loading="lazy"></a>'
+            f'<img src="{p}{m["photo"]}" alt="" width="{m.get("w", 800)}" height="{m.get("h", 1200)}" loading="lazy"></a>'
             f'<div class="info"><h3>{m["name"]}</h3><span class="person-role">{m["role"]}</span>'
-            f'<p>{m["bio"][:150].rsplit(" ", 1)[0]}&hellip;</p><a class="more" href="{p}team/{m["slug"]}.html">View Profile</a></div></article>')
+            f'<p>{excerpt(m["bio"])}</p><a class="more" href="{p}team/{m["slug"]}.html">View Profile</a></div></article>')
+
+def excerpt(text, n=150):
+    return text if len(text) <= n else text[:n].rsplit(" ", 1)[0] + "&hellip;"
 
 def build_team():
     body = (f'<section class="section"><div class="container split">'
@@ -352,17 +363,21 @@ def build_team():
             f'<div class="btns" data-anim><a class="btn btn-navy" href="contact.html">Work With Us</a></div></div>'
             f'<div class="split-media" data-anim="fade"><div class="media-frame">{art()}</div></div></div></section>'
             f'<section class="section grey"><div class="container">{heading("Our People", "Meet the Team", center=True)}'
-            f'<div class="team-grid" data-stagger="0.2">{member_card(PARTNER)}</div></div></section>' + strip())
+            f'<div class="team-grid" data-stagger="0.2">{"".join(member_card(m) for m in TEAM)}</div></div></section>' + strip())
     page("team.html", "Our Team", "Meet the team at O.J. Ekoja & Co.", "team", body, [("About Us", "about.html"), ("Our Team", None)])
 
 def build_profile():
+    for m in TEAM:
+        build_one_profile(m)
+
+def build_one_profile(m):
     p = "../"
-    m = PARTNER
     tags = "".join(f"<span>{t}</span>" for t in m["areas"])
+    tags = f'<div class="tags">{tags}</div>' if tags else ""
     body = (f'<section class="section"><div class="container profile">'
-            f'<div class="photo-wrap split-media" data-anim="fade"><div class="media-frame"><img src="{p}{m["photo"]}" alt="{m["name"]}, {m["role"]}" width="800" height="1200"></div></div>'
+            f'<div class="photo-wrap split-media" data-anim="fade"><div class="media-frame"><img src="{p}{m["photo"]}" alt="{m["name"]}, {m["role"]}" width="{m.get("w", 800)}" height="{m.get("h", 1200)}"></div></div>'
             f'<div class="prose" data-anim><span class="label">{m["role"]}</span><h2>{m["name"]}</h2><div class="heading" style="margin-bottom:24px"><div class="sep"></div></div>'
-            f'<p>{m["bio"]}</p><div class="tags">{tags}</div>'
+            f'<p>{m["bio"]}</p>{tags}'
             f'<div class="contact-lines"><a href="tel:{PHONE_2_TEL}">{PHONE_2}</a><a href="mailto:{EMAIL}">{EMAIL}</a></div>'
             f'<div class="btns"><a class="btn btn-navy" href="{p}contact.html">Book a Consultation</a><a class="btn btn-outline" href="{p}team.html">Back to Team</a></div></div>'
             f'</div></section>' + strip(p))
